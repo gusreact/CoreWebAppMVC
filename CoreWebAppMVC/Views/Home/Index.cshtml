@@ -1,0 +1,19 @@
+﻿@model List<Friend>
+@{
+    ViewData["Title"] = "Amigos indice";
+}
+
+<div class="card-deck row">
+    @foreach (var friend in Model)
+    {
+        <div class="card m-3 col-sm-2">
+            <div class="card-header">
+                <h3>@friend.Name</h3>
+            </div>
+            <img class="card-img-top" src="@friend.ImagePath" asp-append-version="true" />
+            <div class="card-footer text-center">
+                <a asp-controller="home" asp-action="details" asp-route-id="@friend.Id" class="btn btn-primary">View Details</a>
+            </div>
+        </div>
+    }
+</div>
