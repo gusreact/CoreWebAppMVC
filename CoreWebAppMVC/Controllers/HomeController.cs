@@ -9,16 +9,20 @@ namespace CoreWebAppMVC.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private IFriendRepository _friendRepository;
-        public HomeController(ILogger<HomeController> logger, IFriendRepository friendRepository)
+        private IWebHostEnvironment _hosting;
+        public HomeController(ILogger<HomeController> logger,
+            IFriendRepository friendRepository,
+            IWebHostEnvironment hosting)
         {
             _logger = logger;
             _friendRepository = friendRepository;
+            _hosting = hosting;
         }
 
         [Route("Home/Details/{id?}")]
         public IActionResult Details(int? id)
         {
-            DetailsView details = new DetailsView();
+            DetailFriendView details = new DetailFriendView();
             //Is id si null, get friend with id 1
             details.Friend = _friendRepository.GetFriend(id?? 1);
             details.Title = "Friends list View Model";
@@ -39,11 +43,26 @@ namespace CoreWebAppMVC.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Friend friend)
+        public IActionResult Create([FromForm] CreateFriendView friend)
         {
             if (ModelState.IsValid)
             {
-                Friend friendCreated = _friendRepository.Create(friend);
+                string guidImage = null;
+                if (friend.ImagePath != null)
+                {
+                    string imagesFolder = Path.Combine(_hosting.WebRootPath, "images");
+                    guidImage = Guid.NewGuid().ToString() + friend.ImagePath.FileName;
+                    string rootStore = Path.Combine(imagesFolder, guidImage);
+                    friend.ImagePath.CopyTo(new FileStream(rootStore, FileMode.Create));
+                }
+
+                Friend friendCreated = new Friend();
+                friendCreated.Id = friend.Id;
+                friendCreated.Name = friend.Name;
+                friendCreated.Email = friend.Email;
+                friendCreated.Skill = friend.Skill;
+                friendCreated.ImagePath = guidImage;
+                _friendRepository.Create(friendCreated);
                 return RedirectToAction("details", new { id = friendCreated.Id });
             }
             return View();
