@@ -1,7 +1,32 @@
-﻿
+﻿@using CoreWebAppMVC.ViewModels
+@model DetailFriendView;
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Friend Detail";
+    var filePath = "~/images/" + (Model.Friend.ImagePath ?? "nezukoBaby.jpeg");
 }
 
-<h1>Details</h1>
+<div class="row justify-content-center m-3">
+    <div class="col-sm-8">
+        <div class="card">
+            <div class="card-header">
+                <h1>@Model.Friend.Name</h1>
+            </div>
+            <div class="card-body text-center">
+                <img class="card-img-top" src="@filePath" asp-append-version="true" />
+                <h4>Friend ID: @Model.Friend.Email</h4>
+                <h4>Email: @Model.Friend.Id</h4>
+                <h4>Skill: @Model.Friend.Skill</h4>
+            </div>
+            <div class="card-footer text-center">
+                <a href="#" class="btn btn-primary">Back</a>
+                <a href="#" class="btn btn-primary">Edit</a>
+                <a href="#" class="btn btn-danger">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
 
+@section Scripts
+{
+    <script src="~/js/MiScript.js"></script>
+}

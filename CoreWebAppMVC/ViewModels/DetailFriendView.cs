@@ -2,7 +2,7 @@
 
 namespace CoreWebAppMVC.ViewModels
 {
-    public class DetailsView
+    public class DetailFriendView
     {
         public Friend Friend { get; set; }
         public string Title { get; set; }
